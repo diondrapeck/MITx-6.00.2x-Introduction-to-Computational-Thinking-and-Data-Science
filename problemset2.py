@@ -294,9 +294,6 @@ def showPlot1():
 
     
 def showPlot2():
-    """
-    What information does the plot produced by this function tell you?
-    """
     aspect_ratios = []
     times = []
     for width in [10, 20, 25, 50]:
