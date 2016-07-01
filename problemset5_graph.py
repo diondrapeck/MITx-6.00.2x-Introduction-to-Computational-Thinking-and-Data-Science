@@ -110,5 +110,6 @@ class WeightedDigraph(Digraph):
         for key in self.edges:
             for data in self.edges[key]:
                 result += '{0}->{1} ({2}, {3})\n'.format(key, data[0], 
-                float(data[1]), float(data[2]))
+                data[1][0], data[1][1])
         return result
+
