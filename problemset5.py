@@ -5,7 +5,7 @@
 
 import string
 # This imports everything from `graph.py` as if it was defined in this file!
-from graph import * 
+from ps5_graph import * 
 
 #
 # Problem 2: Building up the Campus Map
@@ -52,7 +52,11 @@ def load_map(mapFilename):
         campus.addEdge(new_edge)
     return campus
         
-mitMap = load_map("C:/Users/diond/Documents/Python/summer-projects/ProblemSet5/mit_map.txt")
+mitMap = load_map("C:/Users/diond\Documents/Python/mitx-6.00.2x-introduction-to-computational-thinking-and-data/ps5_mit_map.txt")
+
+# unit tests
+assert isinstance(mitMap, Digraph)
+assert isinstance(mitMap, WeightedDigraph)
 
 #
 # Problem 3: Finding the Shortest Path using Brute Force Search
