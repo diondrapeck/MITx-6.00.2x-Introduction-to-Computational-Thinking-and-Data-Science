@@ -37,19 +37,19 @@ def load_map(mapFilename):
     
     print "Loading map from file..."
     
-    mapfile = open(mapFilename)
+    mapFile = open(mapFilename)
     campus = WeightedDigraph()
 
-    for line in mapfile:
-        start, end, dist, out_dist = line.split()
+    for line in mapFile:
+        start, end, dist, outDist = line.split()
         node1, node2 = Node(start), Node(end)
         for node in [node1, node2]:
             try:
                 campus.addNode(node)
-            except ValueError, new_edge:
+            except ValueError, newEdge:
                 continue
-        new_edge = WeightedEdge(node1, node2, float(dist), float(out_dist))
-        campus.addEdge(new_edge)
+        newEdge = WeightedEdge(node1, node2, float(dist), float(outDist))
+        campus.addEdge(newEdge)
     return campus
         
 mitMap = load_map("C:/Users/diond\Documents/Python/mitx-6.00.2x-introduction-to-computational-thinking-and-data/ps5_mit_map.txt")
@@ -65,7 +65,7 @@ assert isinstance(mitMap, WeightedDigraph)
 # and what the constraints are
 #
 
-def bruteForceSearch(digraph, start, end, maxTotalDist, maxDistOutdoors):    
+def bruteForceSearch(graph, start, end, maxTotalDist, maxDistOutdoors):    
     """
     Finds the shortest path from start to end using brute-force approach.
     The total distance travelled on the path must not exceed maxTotalDist, and
@@ -89,8 +89,41 @@ def bruteForceSearch(digraph, start, end, maxTotalDist, maxDistOutdoors):
         If there exists no path that satisfies maxTotalDist and
         maxDistOutdoors constraints, then raises a ValueError.
     """
-    #TODO
-    pass
+    
+    start = Node(start)
+    end = Node(end)
+        
+    def DFS(start, maxTotalDist, maxDistOutdoors, path = [], best = None):
+        path.append(start)
+        
+        if start in graph.nodes and end in graph.nodes:
+            if start == end:
+                return path
+            for node in graph.childrenOf(start):
+                if node not in path: # avoid cycling due to repeated nodes
+                    if not best or len(path) < len(best):
+                        dist = float(graph.edges[start][node][0])
+                        outDist = float(graph.edges[start][1][1])
+                        distTotal = maxTotalDist - dist
+                        outTotal = maxDistOutdoors - outDist
+                        if distTotal < 0 or outTotal < 0:
+                            continue
+                        newPath = DFS(node, distTotal, outTotal, path, best)
+                        if newPath:
+                            best = newPath
+            return best
+        else:
+            raise Exception("At least one of given nodes is not in the graph.")
+            
+    shortestPath = DFS(start, maxTotalDist, maxDistOutdoors)
+    
+    if shortestPath:
+        return [node for node in path]
+    else:
+        raise ValueError
+        
+trial = bruteForceSearch(mitMap, 32, 56, 100, 50)
+print trial
 
 #
 # Problem 4: Finding the Shorest Path using Optimized Search Method
