@@ -141,20 +141,38 @@ class ClusterSet(object):
         """ Assumes clusters c1 and c2 are in self
         Adds to self a cluster containing the union of c1 and c2
         and removes c1 and c2 from self """
-        # TO DO
-        pass
+        
+        new_cluster = c1.union(c2)
+        self.add(Cluster(new_cluster, c1.pointType))
+        self.members.remove(c1)
+        self.members.remove(c2)
+        
     def findClosest(self, linkage):
         """ Returns a tuple containing the two most similar 
         clusters in self
         Closest defined using the metric linkage """
-        # TO DO
-        pass
+        from itertools import combinations 
+        
+        shortest = None
+        
+        for (c1, c2) in combinations(self.members, 2):
+                dist = linkage(c1, c2)
+                if not shortest or shortest > dist:
+                    shortest = (dist, (c1, c2))
+                
+        return shortest[1]
+        
     def mergeOne(self, linkage):
-        """ Merges the two most simililar clusters in self
+        """ Merges the two most similar clusters in self
         Similar defined using the metric linkage
         Returns the clusters that were merged """
-        # TO DO
-        pass
+        
+        (c1, c2) = self.findClosest(linkage)
+        self.mergeClusters(c1, c2)
+        
+        return (c1, c2)
+        
+        
     def numClusters(self):
         return len(self.members)
     def toStr(self):
@@ -245,11 +263,13 @@ def hCluster(points, linkage, numClusters, printHistory):
     return cS
 
 def test():
-    points = buildCityPoints('cityTemps.txt', False)
+    points = buildCityPoints("C:/Users/diond/Documents/Python/summer-projects/ProblemSet6/ProblemSet6/cityTemps.txt", False)
     hCluster(points, Cluster.singleLinkageDist, 10, False)
-    #points = buildCityPoints('cityTemps.txt', True)
-    #hCluster(points, Cluster.maxLinkageDist, 10, False)
-    #hCluster(points, Cluster.averageLinkageDist, 10, False)
-    #hCluster(points, Cluster.singleLinkageDist, 10, False)
+    points = buildCityPoints("C:/Users/diond/Documents/Python/summer-projects/ProblemSet6/ProblemSet6/cityTemps.txt", True)
+    hCluster(points, Cluster.maxLinkageDist, 10, False)
+    hCluster(points, Cluster.averageLinkageDist, 10, False)
+    hCluster(points, Cluster.singleLinkageDist, 10, False)
 
-#test()
+test()
+
+
