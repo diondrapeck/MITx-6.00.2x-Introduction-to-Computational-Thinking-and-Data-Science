@@ -87,7 +87,7 @@ class Cluster(object):
         dist = 0.0
         
         for point_one in self.points:
-            for point_two in self.other:
+            for point_two in other.points:
                 dist += point_one.distance(point_two)
                 pairs += 1
         
@@ -142,7 +142,7 @@ class ClusterSet(object):
         Adds to self a cluster containing the union of c1 and c2
         and removes c1 and c2 from self """
         
-        new_cluster = c1.union(c2)
+        new_cluster = set(c1.points).union(c2.points)
         self.add(Cluster(new_cluster, c1.pointType))
         self.members.remove(c1)
         self.members.remove(c2)
@@ -157,7 +157,7 @@ class ClusterSet(object):
         
         for (c1, c2) in combinations(self.members, 2):
                 dist = linkage(c1, c2)
-                if not shortest or shortest > dist:
+                if not shortest or shortest[0] > dist:
                     shortest = (dist, (c1, c2))
                 
         return shortest[1]
